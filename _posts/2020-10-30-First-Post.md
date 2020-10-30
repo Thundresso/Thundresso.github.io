@@ -45,4 +45,6 @@ The project took one day overall to learn and complete.
 Bugs:
  - Tails sometimes generated in unexpected positions (FIXED)
  - Apples disappeared sometimes (FIXED)
- - Upon death, the third tail segment disappears because the first two segments follow into the head.
+ - Upon death, the third tail segment disappears because the first two segments follow into the head. (Fixed during export?)
+ 
+ [Play here](https://thundresso.github.io/Snake-ripoff/)
