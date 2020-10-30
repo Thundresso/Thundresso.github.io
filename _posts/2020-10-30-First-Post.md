@@ -47,4 +47,4 @@ Bugs:
  - Apples disappeared sometimes (FIXED)
  - Upon death, the third tail segment disappears because the first two segments follow into the head. (Fixed during export?)
  
- [Play here](https://thundresso.github.io/Snake-ripoff/)
+ [Finished game](https://thundresso.github.io/Snake-ripoff/)
