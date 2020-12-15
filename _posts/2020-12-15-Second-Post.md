@@ -168,6 +168,6 @@ if (kJump)
 
 Before progressing any further on the game, I will definitely need to address the graphics. The next goal is to add running, falling and jumping animations for the player, then work more on the tileset and environment.
 
-
+To player the game, move with the arrow keys and jump with spacebar. Press shift to toggle between touching blue and black blocks, and avoid all spikes.
 
  [Sample level](https://thundresso.github.io/Dual-Runner-2/)
