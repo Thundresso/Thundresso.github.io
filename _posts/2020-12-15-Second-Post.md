@@ -1,5 +1,6 @@
 ---
-published: true
+layout: post
+title: Starting my first game
 ---
 
 Back in high school I created a platformer game involving the use of two screens. These screens are synced and have identical movements and obstacles, however some platforms are only visible on one screen, whilst the others are only visible on the other. This makes for a problem-solving platformer that requires a bit of multitasking and awareness.  [If you are interested, you can try it here.](https://thundresso.github.io/Dual-Runner/) Of course, this game was very amateur with plenty of bugs, as well as rather terrible graphics that I threw together in Photoshop. To get back into game development, I have decided to leverage this idea and create a remastered version of this game.
