@@ -1,0 +1,172 @@
+---
+published: false
+---
+
+Back in high school I created a platformer game involving the use of two screens. These screens are synced and have identical movements and obstacles, however some platforms are only visible on one screen, whilst the others are only visible on the other. This makes for a problem-solving platformer that requires a bit of multitasking and awareness.  [If you are interested, you can try it here.](https://thundresso.github.io/Dual-Runner/) Of course, this game was very amateur with plenty of bugs, as well as rather terrible graphics that I threw together in Photoshop. To get back into game development, I have decided to leverage this idea and create a remastered version of this game.
+
+I will reuse the idea of two screens supporting eachother to present a full image of the platformer, however this game will be implemented with a more sci-fi, futuristic theme. This will be done through the graphics, music and extra features to be implemented. To first new feature will be the ability to 'phase shift'. The player essentially has the option to change dimensions. Whilst in the 1st dimension, he can only touch black blocks. Whilst in the 2nd dimension, he can only touch blue blocks. Spikes will always kill the player. 
+
+By the nature of how I had coded collision, this involved a lot of hardcoding to allow phase shifting to occur. Whilst a level I threw together currently works, I may have to increase code efficiency to prevent problems later down the line.
+
+```
+// Phase shifting
+
+if kShift && onground && (!place_meeting(x, y+1, oParSolid)) && (global.phaseshift = true)
+{
+	global.phaseshift = !global.phaseshift	
+	global.shifting = true
+}
+
+if kShift && onground && (!place_meeting(x, y+1, oParPhasesolid)) && (global.phaseshift = false)
+{
+	global.phaseshift = !global.phaseshift	
+	global.shifting = true
+}
+
+if global.shifting = true
+{
+	kLeft = false
+	kRight = false
+	kJump = false
+	kJumpRelease = false
+	kShift = false
+	shiftTimer = shiftTimer + 1
+	
+	if onground = true && shiftTimer > 2
+		{
+		global.shifting = false
+		shiftTimer = 0
+		}
+}
+
+
+//Wall collision
+
+if (place_meeting(x+hsp, y, oParAlwaysSolid))
+{
+	while (!place_meeting(x+sign(hsp), y, oParAlwaysSolid))
+	{
+		x = x + sign(hsp)
+	}
+		hsp = 0;
+		
+}
+
+if (place_meeting(x+hsp, y, oParSolid)) && (global.phaseshift = false)
+{
+	while (!place_meeting(x+sign(hsp), y, oParSolid))  && (global.shifting = false)
+	{
+		x = x + sign(hsp)
+	}
+		hsp = 0;
+		
+}
+
+if (place_meeting(x+hsp, y, oParPhasesolid)) && (global.phaseshift = true) 
+{
+	while (!place_meeting(x+sign(hsp), y, oParPhasesolid)) && (global.shifting = false)
+	{
+		x = x + sign(hsp)
+	}
+		hsp = 0;
+		
+}
+
+x = x + hsp
+
+
+//Gravity
+
+if (!onground)
+{
+	vsp = Approach(vsp, vspMax, grv)
+}
+
+
+if (place_meeting(x, y+vsp, oParAlwaysSolid))
+{
+	while (!place_meeting(x, y+sign(vsp), oParAlwaysSolid)) && (global.shifting = false)
+	{
+		y = y + sign(vsp)
+	}
+		vsp = 0;
+		
+}
+
+
+if (place_meeting(x, y+vsp, oParSolid)) && (global.phaseshift = false)
+{
+	while (!place_meeting(x, y+sign(vsp), oParSolid)) && (global.shifting = false)
+	{
+		y = y + sign(vsp)
+	}
+		vsp = 0;
+		
+}
+
+
+
+if (place_meeting(x, y+vsp, oParPhasesolid)) && (global.phaseshift = true)
+{
+	while (!place_meeting(x, y+sign(vsp), oParPhasesolid))  && (global.shifting = false)
+	{
+		y = y + sign(vsp)
+	}
+		vsp = 0
+}
+
+
+
+if global.phaseshift = true && (place_meeting(x, y, oParPhasesolid))
+{
+	y = y - 1
+}
+if global.phaseshift = false && (place_meeting(x, y, oParSolid))
+{
+	y = y - 1
+}
+if place_meeting(x, y, oParAlwaysSolid)
+{
+	y = y - 1
+}
+```
+Phase shifting can only occur while the player is on a platform that they can touch. However, due to there being three types of platforms, dimension 1, dimension 2 and the ground which the player can always touch, I had to code three different scenarios for collision for both horizontal and vertical collision. Additionally, an issue occurred where the player would fall too 1 pixel too far when phase shifting, causing them to get stuck in the platform below. This was hard fixed by forcing players up one pixel every frame they were inside a block until they were no longer stuck.
+
+Further QOL additions were included, such as the coyote timer and a jumping input buffer. The coyote timer increases the feeling of responsiveness for the player by allowing them some leeway when jumping off platforms. Currently, even if the player has moved for 4 frames after leaving a platform, they will still be able to jump as if they were on ground. Jump input buffering allows players to still jump upon hitting the ground even if they pressed spacebar too early while landing.
+
+```
+/// QOL
+// Coyote Timer
+if (onground)
+{
+	coyoteTimer = 0
+}
+
+if (kJump) && (coyoteTimer < coyoteFrames)
+{
+		vsp = -jumpHeight
+		coyoteTimer = coyoteFrames
+}
+
+++coyoteTimer
+
+// Jump input buffer
+if (onground) && (jumpBuffer  < jumpBufferFrames)
+{
+	vsp = -jumpHeight
+	jumpsleft = jumpsleft - 1
+}
+
+++jumpBuffer
+
+if (kJump)
+{
+	jumpBuffer = 0
+}
+```
+
+Before progressing any further on the game, I will definitely need to address the graphics. The next goal is to add running, falling and jumping animations for the player, then work more on the tileset and environment.
+
+
+
+ [Sample level](https://thundresso.github.io/Dual-Runner-2/)
